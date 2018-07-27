@@ -21,6 +21,9 @@ bin/zmq-remote-fine.o: cpp/src/drivers/zmq-remote-fine-grained.cpp
 bin/p-server.o: cpp/src/server/plasma-server.cpp
 	g++ -Wall cpp/src/server/plasma-server.cpp `pkg-config --cflags --libs plasma arrow` -lzmq --std=c++11 -obin/p-server.o
 
+bin/noop-server.o: cpp/src/server/noop-server.cpp
+	g++ -Wall cpp/src/server/noop-server.cpp -lzmq --std=c++11 -obin/noop-server.o
+
 clean:
 	rm bin/*.o
 
