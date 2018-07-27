@@ -33,20 +33,21 @@ float *generate_input(int input_length)
 
 int main(int argc, char **argv)
 {
-  if (argc != 1) {
+  if (argc != 2) {
     std::cout << "Usage: ./p-remote.o <Model and Plasma Server IP>\n" << std::endl;
+    return 1;
   }
-  std::string ip = std::string(argv[0]);
+  std::string ip = std::string(argv[1]);
   std::string model_addr = "tcp://" + ip + ":5560";
   std::string plasma_addr = "tcp://" + ip + ":5561";
   
   context_t context_1(1);
   socket_t requester(context_1, ZMQ_REQ);
-  requester.connect(model_addr);
+  requester.connect(model_addr.c_str());
 
   context_t context_2(1);
   socket_t dumper(context_2, ZMQ_REQ);
-  dumper.connect(plasma_addr);
+  dumper.connect(plasma_addr.c_str());
 
   for (int i = 0; i < 2000; i++)
   {
