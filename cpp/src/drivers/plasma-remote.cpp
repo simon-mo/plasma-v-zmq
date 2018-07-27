@@ -33,59 +33,57 @@ float *generate_input(int input_length)
 
 int main(int argc, char **argv)
 {
+  if (argc != 1) {
+    std::cout << "Usage: ./p-remote.o <Model and Plasma Server IP>\n" << std::endl;
+  }
+  std::string ip = std::string(argv[0]);
+  std::string model_addr = "tcp://" + ip + ":5560";
+  std::string plasma_addr = "tcp://" + ip + ":5561";
+  
   context_t context_1(1);
   socket_t requester(context_1, ZMQ_REQ);
-  requester.connect("tcp://localhost:5560");
+  requester.connect(model_addr);
 
   context_t context_2(1);
   socket_t dumper(context_2, ZMQ_REQ);
-  dumper.connect("tcp://localhost:5561");
+  dumper.connect(plasma_addr);
 
   for (int i = 0; i < 2000; i++)
   {
-    printf("back to top of the loop, ");
-
     if (i % 100 == 0)
     {
       std::cerr << i << std::endl;
     }
 
     ObjectID object_id = ObjectID::from_random();
-    printf("Genereated new oid, ");
-
-    // std::cout << object_id.binary() << std::endl;
 
     // Generate Float Arr
     int64_t input_length = 224 * 224 * 3;
     float *input = generate_input(input_length);
-    printf("Generated new input, ");
 
-    // message_t id(20);
-    // memcpy(id.data(), object_id.binary().data(), 20);
+    // Send id to plamsa server
     message_t id(object_id.binary().data(), 20);
     dumper.send(id, ZMQ_SNDMORE);
 
+    // Send size to plasma server
     message_t size(&input_length, sizeof(int64_t));
     dumper.send(size, ZMQ_SNDMORE);
-    // dumper.send(id);
 
-    zmq_send(&dumper, object_id.data(), 20 * sizeof(char), ZMQ_SNDMORE);
-
+    // Send data to plasma server
     message_t data(input, sizeof(float) * input_length);
     dumper.send(data);
-    printf("Sent request to dumper, ");
 
+    // Recv ack from plasma server
     message_t reply;
     dumper.recv(&reply);
-    printf("Recv ack from dumper, ");
 
+    // Send id to python "model" server
     message_t id2(20);
     memcpy(id2.data(), object_id.binary().data(), 20);
     requester.send(id2);
-    printf("Sent request to python, ");
 
+    // Recv ack from python "model" server
     message_t reply2;
     requester.recv(&reply2);
-    printf("Recv ack from python\n");
   }
 }
