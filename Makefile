@@ -15,6 +15,9 @@ bin/zmq-local.o: cpp/src/drivers/zmq-local.cpp
 bin/zmq-remote.o: cpp/src/drivers/zmq-remote.cpp
 	g++ -Wall cpp/src/drivers/zmq-remote.cpp --std=c++11 -lzmq -obin/zmq-remote.o
 
+bin/zmq-remote-fine.o: cpp/src/drivers/zmq-remote-fine-grained.cpp
+	g++ -Wall cpp/src/drivers/zmq-remote-fine-grained.cpp --std=c++11 -lzmq -obin/zmq-remote-fine.o
+
 bin/p-server.o: cpp/src/server/plasma-server.cpp
 	g++ -Wall cpp/src/server/plasma-server.cpp `pkg-config --cflags --libs plasma arrow` -lzmq --std=c++11 -obin/p-server.o
 
