@@ -33,7 +33,7 @@ float* generate_input(int input_length) {
   return input_buffer;
 }
 
-long long add_timestamp(std::chrono::time_point<std::chrono::steady_clock, std::chrono::nanoseconds> start) {
+long long add_timestamp(std::chrono::time_point<std::chrono::high_resolution_clock> start) {
   auto end = high_resolution_clock::now();
   auto duration = duration_cast<microseconds>(end - start);
   return duration.count();
