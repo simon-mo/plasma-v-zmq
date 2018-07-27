@@ -49,18 +49,22 @@ int main(int argc, char **argv)
   socket_t dumper(context_2, ZMQ_REQ);
   dumper.connect(plasma_addr.c_str());
 
+  std::vector<long long> durations = {};
+
   for (int i = 0; i < 2000; i++)
   {
     if (i % 100 == 0)
     {
       std::cerr << i << std::endl;
     }
-
+    
     ObjectID object_id = ObjectID::from_random();
 
     // Generate Float Arr
     int64_t input_length = 224 * 224 * 3;
     float *input = generate_input(input_length);
+
+    auto start = high_resolution_clock::now();
 
     // Send id to plamsa server
     message_t id(object_id.binary().data(), 20);
@@ -86,5 +90,12 @@ int main(int argc, char **argv)
     // Recv ack from python "model" server
     message_t reply2;
     requester.recv(&reply2);
+    auto end = high_resolution_clock::now();
+    auto duration = duration_cast<microseconds>(end - start);
+    durations.push_back(duration.count());
+  }
+
+  for(long long dur: durations) {
+    std::cout << dur << std::endl;
   }
 }
