@@ -1,6 +1,7 @@
 #include <random>
 #include <iostream>
 #include <zmq.hpp>
+#include <sstream>
 
 using namespace std::chrono;
 using namespace zmq;

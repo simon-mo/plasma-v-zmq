@@ -42,7 +42,7 @@ int main(int argc, char** argv) {
     // std::cout << object_id.binary() << std::endl;
 
     // Generate Float Arr
-    int64_t input_length = 224*224*3;
+    int64_t input_length = 20; //224*224*3;
     float* input = generate_input(input_length);
 
     auto start = high_resolution_clock::now();

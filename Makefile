@@ -1,4 +1,4 @@
-all: bin/p-local.o bin/p-remote.o bin/zmq-local.o bin/p-server.o bin/p-fine.o
+all: bin/noop-server.o bin/zmq-remote-fine.o bin/zmq-remote.o bin/p-remote-fine.o bin/p-local.o bin/p-remote.o bin/zmq-local.o bin/p-server.o bin/p-fine.o
 
 bin/p-local.o: cpp/src/drivers/plasma-local.cpp
 	g++ -Wall cpp/src/drivers/plasma-local.cpp `pkg-config --cflags --libs plasma arrow` -lzmq --std=c++11 -obin/p-local.o
@@ -8,6 +8,9 @@ bin/p-remote.o: cpp/src/drivers/plasma-remote.cpp
 
 bin/p-fine.o: cpp/src/drivers/plasma-local-fine-grained.cpp
 	g++ -Wall --std=c++11 cpp/src/drivers/plasma-local-fine-grained.cpp `pkg-config --cflags --libs plasma arrow` -lzmq -obin/p-fine.o
+
+bin/p-remote-fine.o: cpp/src/drivers/plasma-remote-fine-grained.cpp
+	g++ -Wall --std=c++11 cpp/src/drivers/plasma-remote-fine-grained.cpp `pkg-config --cflags --libs plasma arrow` -lzmq -obin/p-remote-fine.o
 
 bin/zmq-local.o: cpp/src/drivers/zmq-local.cpp
 	g++ -Wall cpp/src/drivers/zmq-local.cpp --std=c++11 -lzmq -obin/zmq-local.o

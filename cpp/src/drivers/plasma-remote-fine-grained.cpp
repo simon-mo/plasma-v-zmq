@@ -7,6 +7,7 @@
 #include <arrow/io/memory.h>
 #include <arrow/ipc/writer.h>
 #include <random>
+#include <sstream>
 
 #include <zmq.hpp>
 
@@ -101,6 +102,8 @@ int main(int argc, char **argv)
     message_t reply2;
     requester.recv(&reply2);
     durations.push_back(add_timestamp(start));
+
+    durations_collection.push_back(durations);
   }
 
   for(std::vector<long long> durations: durations_collection) {
